@@ -1,1 +1,970 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSc IT Study Hub</title>
 
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial, sans-serif;
+  background:#f4f7fb;
+  color:#172033;
+  line-height:1.6;
+}
+header{
+  background:linear-gradient(135deg,#182848,#4b6cb7);
+  color:white;
+  padding:25px 18px;
+  text-align:center;
+}
+header h1{font-size:30px}
+header p{opacity:.9}
+
+nav{
+  background:white;
+  padding:12px;
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  position:sticky;
+  top:0;
+  z-index:10;
+  box-shadow:0 2px 10px #0001;
+}
+nav button{
+  border:0;
+  background:#eef2ff;
+  color:#273469;
+  padding:10px 18px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+nav button:hover{background:#dbe4ff}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:25px 15px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px;
+  margin-top:20px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 5px 20px #00000010;
+  border:1px solid #e5e9f2;
+}
+
+.subject-card{
+  cursor:pointer;
+  transition:.2s;
+}
+.subject-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 25px #0002;
+}
+
+.subject-card h3{
+  margin-bottom:8px;
+  color:#243b80;
+}
+
+.unit{
+  background:white;
+  margin:15px 0;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 4px 15px #0001;
+}
+
+.unit-title{
+  padding:17px;
+  background:#eef3ff;
+  font-size:19px;
+  font-weight:bold;
+  color:#243b80;
+}
+
+.topic{
+  padding:18px;
+  border-top:1px solid #eee;
+}
+
+.topic h3{
+  color:#172f75;
+  margin-bottom:12px;
+}
+
+.explain{
+  background:#f8fbff;
+  border-left:5px solid #4b6cb7;
+  padding:15px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.example{
+  background:#fff8e8;
+  border-left:5px solid #f0a500;
+  padding:15px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.exam{
+  background:#effff3;
+  border-left:5px solid #22a447;
+  padding:15px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.points{
+  background:#fafafa;
+  padding:15px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.quiz-btn{
+  border:0;
+  background:#4b6cb7;
+  color:white;
+  padding:11px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.quiz-btn:hover{background:#354f9b}
+
+.back{
+  border:0;
+  background:#222;
+  color:white;
+  padding:10px 17px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-bottom:15px;
+}
+
+.quiz-box{
+  background:white;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 5px 20px #0001;
+}
+
+.option{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:14px;
+  margin:10px 0;
+  border:1px solid #dce1ea;
+  background:#fafbfe;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.option:hover{background:#eef3ff}
+
+.option.correct{
+  background:#d9f8df;
+  border-color:#2ca84a;
+}
+
+.option.wrong{
+  background:#ffe0e0;
+  border-color:#d33;
+}
+
+.feedback{
+  margin-top:15px;
+  padding:13px;
+  border-radius:8px;
+  background:#f2f5fa;
+}
+
+.next{
+  margin-top:15px;
+  border:0;
+  background:#172848;
+  color:white;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.search{
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin:15px 0;
+  font-size:16px;
+}
+
+.score{
+  text-align:center;
+  padding:25px;
+  background:#eef7ff;
+  border-radius:15px;
+}
+
+.small{
+  color:#666;
+  font-size:14px;
+}
+
+ul{padding-left:22px}
+
+@media(max-width:600px){
+  header h1{font-size:24px}
+  .container{padding:18px 10px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎓 BSc IT Study Hub</h1>
+  <p>Learn • Understand • Practice • Quiz</p>
+</header>
+
+<nav>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('subjects')">Subjects</button>
+  <button onclick="showPage('quiz')">Quiz</button>
+  <button onclick="showPage('about')">About</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+  <div class="card">
+    <h2>Welcome to BSc IT Study Hub 👋</h2>
+    <p>
+      इथे फक्त textbook definition पाठ करायची नाही.
+      प्रत्येक topic सोप्या भाषेत, real-life example आणि technical example
+      सोबत समजून घेता येईल.
+    </p>
+  </div>
+
+  <div class="subject-grid">
+
+    <div class="card subject-card" onclick="openSubject('cf')">
+      <h3>💻 Computer Fundamentals</h3>
+      <p>Computer, RAM, Storage, Number System आणि Basics.</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('os')">
+      <h3>⚙️ Operating System-I</h3>
+      <p>OS, Process, Memory, Files आणि System Management.</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('c')">
+      <h3>💻 Programming in C</h3>
+      <p>C basics, variables, operators, conditions आणि loops.</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('math')">
+      <h3>📐 Mathematical Foundation M-1</h3>
+      <p>Matrices, combinations, induction आणि mathematical concepts.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="subjects" class="page">
+
+  <h2>📚 Subjects</h2>
+
+  <input
+    class="search"
+    id="searchBox"
+    placeholder="🔎 Topic search करा..."
+    onkeyup="searchTopics()"
+  >
+
+  <div class="subject-grid">
+
+    <div class="card subject-card" onclick="openSubject('cf')">
+      <h3>Computer Fundamentals</h3>
+      <p>Basics • Memory • Storage • Number System</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('os')">
+      <h3>Operating System-I</h3>
+      <p>OS • Process • Memory • File Management</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('c')">
+      <h3>Programming in C</h3>
+      <p>C Basics • Operators • Conditions • Loops</p>
+    </div>
+
+    <div class="card subject-card" onclick="openSubject('math')">
+      <h3>Mathematical Foundation M-1</h3>
+      <p>Matrices • P&C • Induction • Relations</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- COMPUTER FUNDAMENTALS -->
+<section id="cf" class="page">
+
+<button class="back" onclick="showPage('subjects')">← Back</button>
+
+<h2>💻 Computer Fundamentals</h2>
+
+<div class="unit">
+
+<div class="unit-title">Unit 1 — Computer Basics</div>
+
+<div class="topic searchable">
+<h3>1. Computer म्हणजे काय?</h3>
+
+<div class="explain">
+<b>सोप्या भाषेत:</b><br>
+Computer म्हणजे असा electronic machine जो आपल्याकडून
+data घेतो, त्यावर processing करतो आणि आपल्याला useful result देतो.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+तू calculator मध्ये 10 + 20 टाकतोस → calculator input घेतो →
+calculation करतो → 30 answer दाखवतो.
+Computer सुद्धा याच प्रकारे input → processing → output करतो.
+</div>
+
+<div class="points">
+<b>लक्षात ठेवा:</b>
+<ul>
+<li>Input</li>
+<li>Processing</li>
+<li>Output</li>
+<li>Storage</li>
+</ul>
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+Computer is an electronic device that accepts data as input,
+processes it according to instructions and produces meaningful output.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('computer')">
+🎯 Topic Quiz
+</button>
+</div>
+
+
+<div class="topic searchable">
+<h3>2. Data आणि Information</h3>
+
+<div class="explain">
+<b>Data</b> म्हणजे raw facts किंवा unprocessed माहिती.<br>
+<b>Information</b> म्हणजे process केलेला आणि useful झालेला data.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+एका class मधील marks: 45, 67, 82, 55 हे Data आहे.<br>
+“Class ची average marks 62.25 आहे” हे Information आहे.
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+Data is a collection of raw facts, while information is processed
+data that has meaningful value.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('data')">
+🎯 Topic Quiz
+</button>
+</div>
+
+</div>
+
+
+<div class="unit">
+
+<div class="unit-title">Unit 2 — Memory and Storage</div>
+
+<div class="topic searchable">
+
+<h3>3. RAM म्हणजे काय?</h3>
+
+<div class="explain">
+<b>सोप्या भाषेत:</b><br>
+RAM म्हणजे computer ची temporary working memory.
+Computer वर सध्या जे काम चालू आहे त्यासाठी RAM वापरली जाते.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+समज तुझं study table म्हणजे RAM आहे.
+तू सध्या ज्या books घेऊन अभ्यास करतोस त्या table वर असतात.
+काम झाल्यावर त्या cupboard मध्ये ठेवतोस.<br><br>
+
+इथे <b>Study Table = RAM</b><br>
+<b>Cupboard = Storage</b>
+</div>
+
+<div class="points">
+<b>RAM चे महत्त्व:</b>
+<ul>
+<li>Programs चालवण्यासाठी working space देते.</li>
+<li>RAM जास्त असेल तर अनेक programs एकाच वेळी चालवणे सोपे होऊ शकते.</li>
+<li>RAM ही volatile memory आहे.</li>
+</ul>
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+RAM (Random Access Memory) is a temporary and volatile memory
+used to store data and instructions currently being used by the CPU.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('ram')">
+🎯 RAM Quiz
+</button>
+
+</div>
+
+
+<div class="topic searchable">
+
+<h3>4. Storage म्हणजे काय?</h3>
+
+<div class="explain">
+<b>सोप्या भाषेत:</b><br>
+Storage म्हणजे computer मध्ये files, photos, videos,
+documents आणि software दीर्घकाळ साठवून ठेवण्याची जागा.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+तुझ्या room मधलं cupboard समज.
+तू books आज वापरत नसशील तरी त्या cupboard मध्ये सुरक्षित ठेवू शकतोस.
+Computer मधील SSD/HDD सुद्धा files साठवतात.
+</div>
+
+<div class="points">
+<ul>
+<li>SSD</li>
+<li>Hard Disk</li>
+<li>Pen Drive</li>
+<li>Memory Card</li>
+</ul>
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+Storage is used to permanently store digital data such as files,
+documents, photos, videos and applications.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('storage')">
+🎯 Storage Quiz
+</button>
+
+</div>
+
+
+<div class="topic searchable">
+
+<h3>5. RAM आणि Storage मधला फरक</h3>
+
+<div class="explain">
+RAM = सध्या चालू कामासाठीची temporary जागा.<br>
+Storage = files कायमस्वरूपी ठेवण्यासाठीची जागा.
+</div>
+
+<div class="example">
+<b>🏠 Example:</b><br>
+Study table वर सध्या वापरत असलेली books = RAM.<br>
+Cupboard मध्ये ठेवलेल्या सर्व books = Storage.
+</div>
+
+<div class="exam">
+<b>📝 Exam Point:</b><br>
+RAM is temporary and volatile, while storage is used for
+long-term data retention.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('ramstorage')">
+🎯 Difference Quiz
+</button>
+
+</div>
+
+</div>
+
+
+<div class="unit">
+
+<div class="unit-title">Unit 3 — Number System</div>
+
+<div class="topic searchable">
+
+<h3>6. Number System म्हणजे काय?</h3>
+
+<div class="explain">
+<b>सोप्या भाषेत:</b><br>
+Number system म्हणजे numbers represent करण्याची पद्धत.
+Computer Science मध्ये वेगवेगळ्या number systems चा उपयोग होतो.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+आपण रोज 0 ते 9 digits वापरतो.
+म्हणून आपली everyday counting system म्हणजे Decimal.
+Computer मध्ये मात्र Binary खूप महत्त्वाचा आहे कारण
+computer च्या electronic states ला 0 आणि 1 ने represent करता येते.
+</div>
+
+<div class="points">
+<b>मुख्य Number Systems:</b>
+<ul>
+<li>Decimal → Base 10</li>
+<li>Binary → Base 2</li>
+<li>Octal → Base 8</li>
+<li>Hexadecimal → Base 16</li>
+</ul>
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+A number system is a method of representing numbers using a
+specific set of digits and a base.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('number')">
+🎯 Number System Quiz
+</button>
+
+</div>
+
+
+<div class="topic searchable">
+
+<h3>7. Binary Number System</h3>
+
+<div class="explain">
+<b>सोप्या भाषेत:</b><br>
+Binary मध्ये फक्त दोन digits असतात: <b>0 आणि 1</b>.
+Computer systems मध्ये binary representation अत्यंत महत्त्वाची आहे.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+घरचा switch विचार कर:<br>
+OFF = 0<br>
+ON = 1<br><br>
+Computer मधील binary concept समजण्यासाठी हा simple example
+लक्षात ठेवू शकतोस.
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+Binary number system is a base-2 number system that uses only
+two digits, 0 and 1.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('binary')">
+🎯 Binary Quiz
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- OPERATING SYSTEM -->
+<section id="os" class="page">
+
+<button class="back" onclick="showPage('subjects')">← Back</button>
+
+<h2>⚙️ Operating System-I</h2>
+
+<div class="unit">
+
+<div class="unit-title">Unit 1 — Introduction to OS</div>
+
+<div class="topic">
+<h3>1. Operating System म्हणजे काय?</h3>
+
+<div class="explain">
+Operating System म्हणजे user आणि computer hardware यांच्यामधील
+मुख्य interface.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+Restaurant मध्ये customer थेट kitchen मध्ये जाऊन food बनवत नाही.
+Waiter order घेऊन kitchen पर्यंत पोहोचवतो.
+तसंच user आणि hardware मधील काम OS manage करते.
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+An Operating System is system software that manages computer
+hardware and provides services for application programs.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('os')">
+🎯 OS Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>2. OS ची Functions</h3>
+
+<div class="explain">
+OS computer मधील processor, memory, files, devices आणि programs
+manage करण्यास मदत करते.
+</div>
+
+<div class="points">
+<ul>
+<li>Process Management</li>
+<li>Memory Management</li>
+<li>File Management</li>
+<li>Device Management</li>
+<li>Security</li>
+</ul>
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('osfunctions')">
+🎯 Functions Quiz
+</button>
+
+</div>
+
+</div>
+
+
+<div class="unit">
+
+<div class="unit-title">Unit 2 — Process Management</div>
+
+<div class="topic">
+<h3>3. Process म्हणजे काय?</h3>
+
+<div class="explain">
+Program चालू झाल्यावर त्याला process म्हणतात.
+</div>
+
+<div class="example">
+<b>Example:</b><br>
+तू Chrome ची file फक्त install करून ठेवली → Program.<br>
+Chrome उघडून वापरायला सुरुवात केली → Running Process.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('process')">
+🎯 Process Quiz
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- C PROGRAMMING -->
+<section id="c" class="page">
+
+<button class="back" onclick="showPage('subjects')">← Back</button>
+
+<h2>💻 Programming in C</h2>
+
+<div class="unit">
+
+<div class="unit-title">Unit 1 — C Basics</div>
+
+<div class="topic">
+<h3>1. C Programming म्हणजे काय?</h3>
+
+<div class="explain">
+C ही general-purpose programming language आहे.
+Computer ला instructions देण्यासाठी C वापरता येते.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+तू एखाद्याला “पहिले 2 pens घे, मग notebook उघड” असं
+step-by-step सांगतोस.
+Programming मध्ये computer ला अशाच प्रकारे instructions दिल्या जातात.
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+C is a general-purpose programming language used for developing
+system software and application programs.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('c')">
+🎯 C Basics Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>2. Variable म्हणजे काय?</h3>
+
+<div class="explain">
+Variable म्हणजे program मध्ये value store करण्यासाठी दिलेले नाव.
+</div>
+
+<div class="example">
+<b>Example:</b><br>
+तुझ्या bag वर “Books” असा label लावला आहे.
+त्या नावाखाली books ठेवतोस.<br><br>
+Programming मध्ये variable सुद्धा data ठेवण्यासाठी एक नाव असते.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('variable')">
+🎯 Variable Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>3. if-else म्हणजे काय?</h3>
+
+<div class="explain">
+if-else वापरून program ला condition नुसार decision घेता येतो.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+जर पाऊस पडत असेल → umbrella घे.<br>
+नाहीतर → umbrella घेऊ नको.<br><br>
+
+Computer मध्येही condition true/false तपासून decision घेतला जातो.
+</div>
+
+<div class="exam">
+<b>📝 Exam Point:</b><br>
+if-else is a decision-making statement used to execute different
+blocks of statements based on a condition.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('ifelse')">
+🎯 if-else Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>4. Loop म्हणजे काय?</h3>
+
+<div class="explain">
+एखादे काम पुन्हा पुन्हा करायचे असेल तर loop वापरता येतो.
+</div>
+
+<div class="example">
+<b>🏠 Example:</b><br>
+Teacher म्हणतो: “ही line 10 वेळा लिहा.”
+प्रत्येक वेळेला manually सांगण्याऐवजी programming मध्ये loop वापरता येतो.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('loop')">
+🎯 Loop Quiz
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MATH -->
+<section id="math" class="page">
+
+<button class="back" onclick="showPage('subjects')">← Back</button>
+
+<h2>📐 Mathematical Foundation M-1</h2>
+
+<div class="unit">
+
+<div class="unit-title">Unit 1 — Matrices</div>
+
+<div class="topic">
+<h3>1. Matrix म्हणजे काय?</h3>
+
+<div class="explain">
+Numbers किंवा values rows आणि columns मध्ये rectangular form मध्ये
+arrange केले असतील तर त्याला Matrix म्हणतात.
+</div>
+
+<div class="example">
+<b>🏠 Real-life Example:</b><br>
+Class मध्ये students चे marks table मध्ये लिहिले:
+Rows = students<br>
+Columns = subjects<br>
+हा table matrix सारखा समजता येतो.
+</div>
+
+<div class="exam">
+<b>📝 Exam Answer:</b><br>
+A matrix is a rectangular arrangement of numbers or elements
+in rows and columns.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('matrix')">
+🎯 Matrix Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>2. Permutation आणि Combination</h3>
+
+<div class="explain">
+Permutation मध्ये arrangement/order महत्त्वाचा असतो.
+Combination मध्ये selection महत्त्वाचे असते.
+</div>
+
+<div class="example">
+<b>🏠 Example:</b><br>
+3 students मधून 2 students निवडायचे → Combination.<br>
+त्या 2 students ना first आणि second position द्यायची →
+Permutation.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('pc')">
+🎯 P&C Quiz
+</button>
+
+</div>
+
+
+<div class="topic">
+<h3>3. Mathematical Induction</h3>
+
+<div class="explain">
+Mathematical Induction ही mathematical statement अनेक positive
+integers साठी true आहे हे prove करण्याची पद्धत आहे.
+</div>
+
+<div class="example">
+<b>🏠 Example:</b><br>
+Dominoes ची line कल्पना कर.
+पहिला domino पडला आणि प्रत्येक domino पुढचा domino पाडतो,
+तर पूर्ण line पडते.
+Induction मध्येही अशीच basic idea वापरली जाते.
+</div>
+
+<button class="quiz-btn" onclick="startQuiz('induction')">
+🎯 Induction Quiz
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- QUIZ PAGE -->
+<section id="quiz" class="page">
+
+<h2>🎯 Topic Quiz</h2>
+
+<div id="quizContent" class="quiz-box">
+
+<p>Quiz सुरू करण्यासाठी कोणत्याही topic मधील “Topic Quiz” button दाबा.</p>
+
+</div>
+
+</section>
+
+
+<!-- ABOUT -->
+<section id="about" class="page">
+
+<div class="card">
+<h2>📖 About Study Hub</h2>
+
+<p>
+हा website BSc IT students साठी learning आणि practice सोपी करण्यासाठी
+बनवलेला आहे.
+</p>
+
+<br>
+
+<ul>
+<li>Simple explanations</li>
+<li>Real-life examples</li>
+<li>Exam-ready points</li>
+<li>Topic-wise quizzes</li>
+<li>Instant feedback</li>
+</ul>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+const quizzes = {
+
+computer:[
+["Computer चे basic working कोणत्या sequence वर आधारित आहे?","Input → Processing → Output","Output → Input → Processing","Processing → Output → Input","Storage → Output → Input",0],
+["Computer ला data कोण देऊ शकतो?","Input device","फक्त monitor","फक्त printer","फक्त speaker",0],
+["Processing चे मुख्य काम कोण करते?","CPU","Keyboard","Monitor","Speaker",0],
+["Computer चा result user ला कोण दाखवतो?","Output device","RAM","Mouse pad","Power cable",0],
+["Computer मध्ये data store करण्यासाठी कोणता भाग वापरता येतो?","Storage","Monitor","Keyboard","Mouse",0]
+],
+
+data:[
+["Raw facts ला काय म्हणतात?","Data","Information","Program","Output",0],
+["Processed आणि meaningful data म्हणजे काय?","Information","Keyboard","Hardware","Virus",0],
+["45, 60, 75 हे marks raw स्वरूपात दिले असतील तर ते काय आहेत?","Data","Information","Software","Process",0],
+["Average marks काढल्यानंतर मिळालेला meaningful result काय आहे?","Information","Raw data","Keyboard","Input device",0],
+["Data process करण्याचे काम कोण करते?","Computer","Chair","Table","Notebook",0]
+],
+
+ram:[
+["Game चालू असताना working memory म्हणून कोणता भाग महत्त्वाचा असतो?","RAM","Keyboard","Monitor","Printer",0],
+["RAM चा full form काय आहे?","Random Access Memory","Read Access Machine","Rapid Application Memory","Random Application Machine",0],
+["RAM कोणत्या प्रकारची memory आहे?","Volatile","Permanent","Paper","Optical",0],
+["Computer बंद केल्यावर RAM मधील temporary data साधारणपणे काय होते?","टिकत नाही","कायम save होते","Printer मध्ये जातो","Monitor मध्ये जातो",0],
+["Study table चे ex
